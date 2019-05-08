@@ -211,6 +211,20 @@ class GildedRoseTests: XCTestCase {
         // Then conjured item has degraded by two
         itemIsExpectedQuality()
     }
+    
+    func testConjuredItemsCannotBeNegativeQuality() {
+        // Given
+        let conjuredItem = itemOfType(.conjured)
+        conjuredItem.quality = 1
+        expectedEndQuality = 0
+        shop.items = [conjuredItem]
+        
+        // When
+        oneDayPasses()
+        
+        // Then conjured item has degraded by two
+        itemIsExpectedQuality()
+    }
 }
 
 #if os(Linux)

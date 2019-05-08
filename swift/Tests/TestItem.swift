@@ -17,7 +17,7 @@ enum TestItem {
         case .zeroQuality: return "Zero Quality Item"
         case .agedBrie: return "Aged Brie"
         case .sulfuras: return "Sulfuras, Hand of Ragnaros"
-        case .conjured: return "Conjured Item"
+        case .conjured: return "Conjured"
         case .concertTicket: return "Backstage passes to a TAFKAL80ETC concert"
         }
     }
