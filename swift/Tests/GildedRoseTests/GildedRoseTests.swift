@@ -198,6 +198,19 @@ class GildedRoseTests: XCTestCase {
         // Then ticket quality is zero, you've missed the concert
         itemIsExpectedQuality()
     }
+    
+    func testConjuredItemsDegradeTwiceAsFast() {
+        // Given
+        let conjuredItem = itemOfType(.conjured)
+        expectedEndQuality = conjuredItem.quality - 2
+        shop.items = [conjuredItem]
+        
+        // When
+        oneDayPasses()
+        
+        // Then conjured item has degraded by two
+        itemIsExpectedQuality()
+    }
 }
 
 #if os(Linux)
