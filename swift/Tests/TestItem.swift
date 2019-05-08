@@ -7,7 +7,7 @@ enum TestItem {
     case zeroQuality
     case agedBrie
     case sulfuras
-    case concertTicket(daystoConcert: Int)
+    case concertTicket(daysToConcert: Int)
     
     var name: String {
         switch self {
