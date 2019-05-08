@@ -75,6 +75,6 @@ extension Item {
     }
     
     var isConjured: Bool {
-        return name.contains("Conjured")
+        return name.lowercased().contains("conjured")
     }
 }
