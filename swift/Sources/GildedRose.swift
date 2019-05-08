@@ -47,7 +47,7 @@ public class GildedRose {
         
         if item.sellIn < 0 {
             if !item.isAgedBrie {
-                if !item.isConcertTicket && (item.quality > 0 && !item.isSulfuras) {
+                if !item.isConcertTicket && !item.isSulfuras && item.quality > 0 {
                     item.quality -= 1
                 } else {
                     item.quality -= item.quality
