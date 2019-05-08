@@ -202,6 +202,7 @@ class GildedRoseTests: XCTestCase {
     func testConcertTicketCannotExceedMaxQuality() {
         // Given
         let ticket = concertTicket(daysToConcert: 2)
+        ticket.quality = 50
         expectedEndQuality = shop.maxQuality
         shop.items = [ticket]
         

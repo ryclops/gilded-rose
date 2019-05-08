@@ -25,7 +25,7 @@ public class GildedRose {
             item.quality += 1
             
             if item.isConcertTicket {
-                if item.sellIn < 11 && item.quality < 50 {
+                if item.sellIn < 11 && item.quality < maxQuality {
                     item.quality += 1
                 }
                 
