@@ -17,10 +17,14 @@ public class GildedRose {
     }
     
     private func updateQualityForItem(_ item: Item) {
-        let isNormalRulesItem = (!item.isAgedBrie && !item.isConcertTicket) && (item.quality > 0 && !item.isSulfuras)
+        let isNormalRulesItem = (!item.isAgedBrie && !item.isConcertTicket && !item.isSulfuras) && item.quality > 0
         
         if isNormalRulesItem {
             item.quality -= 1
+            
+            if item.isConjured && item.quality > 0 {
+                item.quality -= 1
+            }
         } else if item.quality < maxQuality {
             item.quality += 1
             
@@ -66,5 +70,9 @@ extension Item {
     
     var isSulfuras: Bool {
         return name == "Sulfuras, Hand of Ragnaros"
+    }
+    
+    var isConjured: Bool {
+        return name == "Conjured"
     }
 }
