@@ -198,6 +198,19 @@ class GildedRoseTests: XCTestCase {
         // Then ticket quality is zero, you've missed the concert
         itemIsExpectedQuality()
     }
+    
+    func testConcertTicketCannotExceedMaxQuality() {
+        // Given
+        let ticket = concertTicket(daysToConcert: 2)
+        expectedEndQuality = shop.maxQuality
+        shop.items = [ticket]
+        
+        // When
+        oneDayPasses()
+        
+        // Then ticket quality is zero, you've missed the concert
+        itemIsExpectedQuality()
+    }
 }
 
 #if os(Linux)
@@ -215,7 +228,8 @@ extension GildedRoseTests {
             ("testConcertTicketIncreasesInQualityByOneIfMoreThanTenDays", testConcertTicketIncreasesInQualityByOneIfMoreThanTenDays),
             ("testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess", testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess),
             ("testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess", testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess),
-            ("testConcertTicketQualityIsZeroAfterConcert", testConcertTicketQualityIsZeroAfterConcert)
+            ("testConcertTicketQualityIsZeroAfterConcert", testConcertTicketQualityIsZeroAfterConcert),
+            ("testConcertTicketCannotExceedMaxQuality", testConcertTicketCannotExceedMaxQuality)
         ]
     }    
 }
