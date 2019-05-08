@@ -106,6 +106,15 @@ class GildedRoseTests: XCTestCase {
         
         XCTAssertEqual(itemStartQuality + 3, app.items[0].quality)
     }
+    
+    func testConcertTicketQualityIsZeroAfterConcert() {
+        let testItems = items(ofTypes: [.concertTicket(daysToConcert: 0)])
+        
+        let app = GildedRose(items: testItems)
+        app.updateQuality()
+        
+        XCTAssertEqual(0, app.items[0].quality)
+    }
 }
 
 #if os(Linux)
