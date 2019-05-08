@@ -8,6 +8,8 @@ public class GildedRose {
     
     public func updateQuality() {
         
+        let maxQuality = 50
+        
         for i in 0..<items.count {
             let item = items[i]
             let isAgedBrie = item.name == "Aged Brie"
@@ -21,7 +23,7 @@ public class GildedRose {
                     }
                 }
             } else {
-                if (item.quality < 50) {
+                if (item.quality < maxQuality) {
                     item.quality = item.quality + 1
                     
                     if (isConcertTicket) {
@@ -32,7 +34,7 @@ public class GildedRose {
                         }
                         
                         if (item.sellIn < 6) {
-                            if (item.quality < 50) {
+                            if (item.quality < maxQuality) {
                                 item.quality = item.quality + 1
                             }
                         }
@@ -56,7 +58,7 @@ public class GildedRose {
                         item.quality = item.quality - item.quality
                     }
                 } else {
-                    if (item.quality < 50) {
+                    if (item.quality < maxQuality) {
                         item.quality = item.quality + 1
                     }
                 }
