@@ -14,7 +14,6 @@ class GildedRoseTests: XCTestCase {
     
     func testQualityDegradesTwiceAsFastAfterSellByDate() {
         let testItems = items(ofTypes: [.notExpired, .expired])
-        
         let unexpiredStartQuality = testItems[0].quality
         let expiredStartQuality = testItems[1].quality
         
@@ -27,7 +26,6 @@ class GildedRoseTests: XCTestCase {
     
     func testQualityOfItemIsNeverNegative() {
         let testItems = items(ofTypes: [.zeroQuality])
-        
         let itemStartQuality = testItems[0].quality
         XCTAssertEqual(0, itemStartQuality)
         
@@ -35,6 +33,16 @@ class GildedRoseTests: XCTestCase {
         app.updateQuality()
         
         XCTAssertEqual(0, itemStartQuality)
+    }
+    
+    func testAgedBrieIncreasesInQualityWithAge() {
+        let testItems = items(ofTypes: [.agedBrie])
+        let itemStartQuality = testItems[0].quality
+        
+        let app = GildedRose(items: testItems)
+        app.updateQuality()
+        
+        XCTAssertEqual(itemStartQuality + 1, app.items[0].quality)
     }
 }
 
