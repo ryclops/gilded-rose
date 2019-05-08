@@ -1,4 +1,6 @@
 
+import Foundation
+
 public class GildedRose {
     let maxQuality = 50
     var items:[Item]
@@ -73,6 +75,6 @@ extension Item {
     }
     
     var isConjured: Bool {
-        return name == "Conjured"
+        return name.contains("Conjured")
     }
 }
