@@ -6,6 +6,7 @@ enum TestItem {
     case notExpired
     case zeroQuality
     case agedBrie
+    case sulfuras
     
     var name: String {
         switch self {
@@ -13,6 +14,7 @@ enum TestItem {
         case .notExpired: return "Not Expired Item"
         case .zeroQuality: return "Zero Quality Item"
         case .agedBrie: return "Aged Brie"
+        case .sulfuras: return "Sulfuras, Hand of Ragnaros"
         }
     }
     
@@ -22,6 +24,7 @@ enum TestItem {
         case .notExpired: return 5
         case .zeroQuality: return 0
         case .agedBrie: return 5
+        case .sulfuras: return 0
         }
     }
     
@@ -31,6 +34,7 @@ enum TestItem {
         case .notExpired: return 5
         case .zeroQuality: return 0
         case .agedBrie: return 5
+        case .sulfuras: return 80
         }
     }
 }
