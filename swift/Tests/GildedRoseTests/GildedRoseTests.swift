@@ -242,7 +242,9 @@ extension GildedRoseTests {
             ("testConcertTicketIncreasesInQualityByOneIfMoreThanTenDays", testConcertTicketIncreasesInQualityByOneIfMoreThanTenDays),
             ("testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess", testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess),
             ("testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess", testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess),
-            ("testConcertTicketQualityIsZeroAfterConcert", testConcertTicketQualityIsZeroAfterConcert)
+            ("testConcertTicketQualityIsZeroAfterConcert", testConcertTicketQualityIsZeroAfterConcert),
+            ("testConjuredItemsDegradeTwiceAsFast", testConjuredItemsDegradeTwiceAsFast),
+            ("testConjuredItemsCannotBeNegativeQuality", testConjuredItemsCannotBeNegativeQuality)
         ]
     }    
 }

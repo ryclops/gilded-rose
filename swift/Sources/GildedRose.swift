@@ -17,22 +17,20 @@ public class GildedRose {
     }
     
     private func updateQualityForItem(_ item: Item) {
-        if !item.isAgedBrie && !item.isConcertTicket {
-            if item.quality > 0 && !item.isSulfuras {
-                item.quality -= 1
-            }
-        } else {
-            if item.quality < maxQuality {
-                item.quality += 1
+        let isNormalRulesItem = (!item.isAgedBrie && !item.isConcertTicket) && (item.quality > 0 && !item.isSulfuras)
+        
+        if isNormalRulesItem {
+            item.quality -= 1
+        } else if item.quality < maxQuality {
+            item.quality += 1
+            
+            if item.isConcertTicket {
+                if item.sellIn < 11 && item.quality < 50 {
+                    item.quality += 1
+                }
                 
-                if item.isConcertTicket {
-                    if item.sellIn < 11 && item.quality < 50 {
-                        item.quality += 1
-                    }
-                    
-                    if item.sellIn < 6 && item.quality < maxQuality {
-                        item.quality += 1
-                    }
+                if item.sellIn < 6 && item.quality < maxQuality {
+                    item.quality += 1
                 }
             }
         }
