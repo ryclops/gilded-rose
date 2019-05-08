@@ -13,19 +13,28 @@ class GildedRoseTests: XCTestCase {
     }
     
     func testQualityDegradesTwiceAsFastAfterSellByDate() {
-        let items = [
-            Item(name: "NotExpiredItem", sellIn: 5, quality: 5),
-            Item(name: "ExpiredItem", sellIn: -1, quality: 5)
-        ]
+        let testItems = items(ofTypes: [.notExpired, .expired])
         
-        let unexpiredStartQuality = items[0].quality
-        let expiredStartQuality = items[1].quality
+        let unexpiredStartQuality = testItems[0].quality
+        let expiredStartQuality = testItems[1].quality
         
-        let app = GildedRose(items: items);
+        let app = GildedRose(items: testItems);
         app.updateQuality()
         
         XCTAssertEqual(unexpiredStartQuality - 1, app.items[0].quality)
         XCTAssertEqual(expiredStartQuality - 2, app.items[1].quality)
+    }
+    
+    func testQualityOfItemIsNeverNegative() {
+        let testItems = items(ofTypes: [.zeroQuality])
+        
+        let itemStartQuality = testItems[0].quality
+        XCTAssertEqual(0, itemStartQuality)
+        
+        let app = GildedRose(items: testItems)
+        app.updateQuality()
+        
+        XCTAssertEqual(0, itemStartQuality)
     }
 }
 
