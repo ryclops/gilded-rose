@@ -7,6 +7,7 @@ enum TestItem {
     case zeroQuality
     case agedBrie
     case sulfuras
+    case conjured
     case concertTicket(daysToConcert: Int)
     
     var name: String {
@@ -16,6 +17,7 @@ enum TestItem {
         case .zeroQuality: return "Zero Quality Item"
         case .agedBrie: return "Aged Brie"
         case .sulfuras: return "Sulfuras, Hand of Ragnaros"
+        case .conjured: return "Conjured"
         case .concertTicket: return "Backstage passes to a TAFKAL80ETC concert"
         }
     }
@@ -27,6 +29,7 @@ enum TestItem {
         case .zeroQuality: return 0
         case .agedBrie: return 5
         case .sulfuras: return 0
+        case .conjured: return 10
         case .concertTicket(let expiry): return expiry
         }
     }
@@ -38,6 +41,7 @@ enum TestItem {
         case .zeroQuality: return 0
         case .agedBrie: return 5
         case .sulfuras: return 80
+        case .conjured: return 10
         case .concertTicket: return 25
         }
     }

@@ -1,5 +1,6 @@
 
 public class GildedRose {
+    let maxQuality = 50
     var items:[Item]
     
     required public init(items:[Item]) {
@@ -9,53 +10,61 @@ public class GildedRose {
     public func updateQuality() {
         
         for i in 0..<items.count {
-            if (items[i].name != "Aged Brie" && items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
-                if (items[i].quality > 0) {
-                    if (items[i].name != "Sulfuras, Hand of Ragnaros") {
-                        items[i].quality = items[i].quality - 1
-                    }
-                }
-            } else {
-                if (items[i].quality < 50) {
-                    items[i].quality = items[i].quality + 1
-                    
-                    if (items[i].name == "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].sellIn < 11) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1
-                            }
-                        }
-                        
-                        if (items[i].sellIn < 6) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1
-                            }
-                        }
-                    }
-                }
-            }
+            let item = items[i]
+            updateQualityForItem(item)
+            updateSellInForItem(item)
+        }
+    }
+    
+    private func updateQualityForItem(_ item: Item) {
+        let isNormalRulesItem = (!item.isAgedBrie && !item.isConcertTicket) && (item.quality > 0 && !item.isSulfuras)
+        
+        if isNormalRulesItem {
+            item.quality -= 1
+        } else if item.quality < maxQuality {
+            item.quality += 1
             
-            if (items[i].name != "Sulfuras, Hand of Ragnaros") {
-                items[i].sellIn = items[i].sellIn - 1
-            }
-            
-            if (items[i].sellIn < 0) {
-                if (items[i].name != "Aged Brie") {
-                    if (items[i].name != "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].quality > 0) {
-                            if (items[i].name != "Sulfuras, Hand of Ragnaros") {
-                                items[i].quality = items[i].quality - 1
-                            }
-                        }
-                    } else {
-                        items[i].quality = items[i].quality - items[i].quality
-                    }
-                } else {
-                    if (items[i].quality < 50) {
-                        items[i].quality = items[i].quality + 1
-                    }
+            if item.isConcertTicket {
+                if item.sellIn < 11 && item.quality < 50 {
+                    item.quality += 1
+                }
+                
+                if item.sellIn < 6 && item.quality < maxQuality {
+                    item.quality += 1
                 }
             }
         }
+    }
+    
+    private func updateSellInForItem(_ item: Item) {
+        if !item.isSulfuras {
+            item.sellIn -= 1
+        }
+        
+        if item.sellIn < 0 {
+            if !item.isAgedBrie {
+                if !item.isConcertTicket && (item.quality > 0 && !item.isSulfuras) {
+                    item.quality -= 1
+                } else {
+                    item.quality -= item.quality
+                }
+            } else if item.quality < maxQuality {
+                item.quality += 1
+            }
+        }
+    }
+}
+
+extension Item {
+    var isAgedBrie: Bool {
+        return name == "Aged Brie"
+    }
+    
+    var isConcertTicket: Bool {
+        return name == "Backstage passes to a TAFKAL80ETC concert"
+    }
+    
+    var isSulfuras: Bool {
+        return name == "Sulfuras, Hand of Ragnaros"
     }
 }

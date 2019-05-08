@@ -211,6 +211,33 @@ class GildedRoseTests: XCTestCase {
         // Then ticket quality is zero, you've missed the concert
         itemIsExpectedQuality()
     }
+    
+    func testConjuredItemsDegradeTwiceAsFast() {
+        // Given
+        let conjuredItem = itemOfType(.conjured)
+        expectedEndQuality = conjuredItem.quality - 2
+        shop.items = [conjuredItem]
+        
+        // When
+        oneDayPasses()
+        
+        // Then conjured item has degraded by two
+        itemIsExpectedQuality()
+    }
+    
+    func testConjuredItemsCannotBeNegativeQuality() {
+        // Given
+        let conjuredItem = itemOfType(.conjured)
+        conjuredItem.quality = 1
+        expectedEndQuality = 0
+        shop.items = [conjuredItem]
+        
+        // When
+        oneDayPasses()
+        
+        // Then conjured item has degraded by two
+        itemIsExpectedQuality()
+    }
 }
 
 #if os(Linux)
@@ -229,7 +256,9 @@ extension GildedRoseTests {
             ("testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess", testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess),
             ("testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess", testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess),
             ("testConcertTicketQualityIsZeroAfterConcert", testConcertTicketQualityIsZeroAfterConcert),
-            ("testConcertTicketCannotExceedMaxQuality", testConcertTicketCannotExceedMaxQuality)
+            ("testConcertTicketCannotExceedMaxQuality", testConcertTicketCannotExceedMaxQuality),
+            ("testConjuredItemsDegradeTwiceAsFast", testConjuredItemsDegradeTwiceAsFast),
+            ("testConjuredItemsCannotBeNegativeQuality", testConjuredItemsCannotBeNegativeQuality)
         ]
     }    
 }
