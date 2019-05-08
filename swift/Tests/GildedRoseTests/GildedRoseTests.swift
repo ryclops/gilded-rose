@@ -4,116 +4,199 @@ import XCTest
 @testable import GildedRose
 
 class GildedRoseTests: XCTestCase {
-
-    func testFoo() {
-        let items = [Item(name: "foo", sellIn: 0, quality: 0)]
-        let app = GildedRose(items: items);
-        app.updateQuality();
-        XCTAssertEqual("foo", app.items[0].name);
+    var shop: GildedRose!
+    var expectedEndQuality: Int?
+    var expectedEndSellIn: Int?
+    
+    var firstItem: Item {
+        return shop.items[0]
     }
     
-    func testQualityDegradesTwiceAsFastAfterSellByDate() {
-        let testItems = items(ofTypes: [.notExpired, .expired])
-        let unexpiredStartQuality = testItems[0].quality
-        let expiredStartQuality = testItems[1].quality
+    override func setUp() {
+        super.setUp()
+        shop = GildedRose(items: [])
+    }
+    
+    func oneDayPasses() {
+        shop.updateQuality()
+    }
+    
+    func itemIsExpectedQuality() {
+        guard let expectedQuality = expectedEndQuality else {
+            XCTAssert(false)
+            return
+        }
         
-        let app = GildedRose(items: testItems);
-        app.updateQuality()
+        XCTAssert(expectedQuality == firstItem.quality)
+    }
+    
+    func itemIsExpectedSellIn() {
+        guard let expectedSellIn = expectedEndSellIn else {
+            XCTAssert(false)
+            return
+        }
         
-        XCTAssertEqual(unexpiredStartQuality - 1, app.items[0].quality)
-        XCTAssertEqual(expiredStartQuality - 2, app.items[1].quality)
+        XCTAssert(expectedSellIn == firstItem.sellIn)
+    }
+    
+    // MARK: - Tests
+    
+    func testFoo() {
+        // Given
+        let foo = Item(name: "foo", sellIn: 0, quality: 0)
+        shop.items = [foo]
+        
+        // When
+        oneDayPasses()
+        
+        // Then name is unchanged
+        XCTAssertEqual("foo", firstItem.name);
+    }
+    
+    func testQualityDegradesByOneBeforeSellByDate() {
+        // Given
+        let notExpiredItem = itemOfType(.notExpired)
+        expectedEndQuality = notExpiredItem.quality - 1
+        shop.items = [notExpiredItem]
+        
+        // When
+        oneDayPasses()
+        
+        // Then unexpired item reduces in quality by 1
+        itemIsExpectedQuality()
+    }
+    
+    func testQualityDegradesByTwoAfterSellByDate() {
+        // Given
+        let expiredItem = itemOfType(.expired)
+        expectedEndQuality = expiredItem.quality - 2
+        shop.items = [expiredItem]
+        
+        // When
+        oneDayPasses()
+        
+        // Then unexpired item reduces in quality by 2
+        itemIsExpectedQuality()
     }
     
     func testQualityOfItemIsNeverNegative() {
-        let testItems = items(ofTypes: [.zeroQuality])
-        let itemStartQuality = testItems[0].quality
-        XCTAssertEqual(0, itemStartQuality)
+        // Given
+        let zeroQualityItem = itemOfType(.zeroQuality)
+        expectedEndQuality = 0
+        shop.items = [zeroQualityItem]
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
+        XCTAssertEqual(0, zeroQualityItem.quality)
         
-        XCTAssertEqual(0, itemStartQuality)
+        // When
+        oneDayPasses()
+        
+        // Then quality remains as zero
+        itemIsExpectedQuality()
     }
     
     func testAgedBrieIncreasesInQualityWithAge() {
-        let testItems = items(ofTypes: [.agedBrie])
-        let itemStartQuality = testItems[0].quality
+        // Given
+        let agedBrie = itemOfType(.agedBrie)
+        expectedEndQuality = agedBrie.quality + 1
+        shop.items = [agedBrie]
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
+        // When
+        oneDayPasses()
         
-        XCTAssertEqual(itemStartQuality + 1, app.items[0].quality)
+        // Then Aged Brie has increased in quality by 1
+        itemIsExpectedQuality()
     }
     
     func testQualityOfItemNeverMoreThanFifty() {
-        let testItems = items(ofTypes: [.agedBrie])
-        testItems[0].quality = 50
+        // Given
+        let agedBrie = itemOfType(.agedBrie)
+        agedBrie.quality = 50
+        expectedEndQuality = 50
+        shop.items = [agedBrie]
         
-        let itemStartQuality = testItems[0].quality
+        // When
+        oneDayPasses()
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
-        
-        XCTAssertEqual(itemStartQuality, app.items[0].quality)
+        // Then Aged Brie still has a quality of 50
+        itemIsExpectedQuality()
     }
     
     func testSulfurasNeverDecreasesInQuality() {
-        let testItems = items(ofTypes: [.sulfuras])
-        let itemStartQuality = testItems[0].quality
+        // Given
+        let sulfuras = itemOfType(.sulfuras)
+        expectedEndQuality = sulfuras.quality
+        shop.items = [sulfuras]
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
+        // When
+        oneDayPasses()
         
-        XCTAssertEqual(itemStartQuality, app.items[0].quality)
+        // Then Sulfuras' quality is unchanged (it's legendary)
+        itemIsExpectedQuality()
     }
     
     func testSulfurasNeverHasToBeSold() {
-        let testItems = items(ofTypes: [.sulfuras])
-        let itemStartSellIn = testItems[0].sellIn
+        // Given
+        let sulfuras = itemOfType(.sulfuras)
+        expectedEndSellIn = sulfuras.sellIn
+        shop.items = [sulfuras]
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
+        // When
+        oneDayPasses()
         
-        XCTAssertEqual(itemStartSellIn, app.items[0].sellIn)
+        // Then Sulfuras' sell by date remains unchanged
+        itemIsExpectedSellIn()
     }
     
     func testConcertTicketIncreasesInQualityByOneIfMoreThanTenDays() {
-        let testItems = items(ofTypes: [.concertTicket(daysToConcert: 15)])
-        let itemStartQuality = testItems[0].quality
+        // Given
+        let ticket = concertTicket(daysToConcert: 15)
+        expectedEndQuality = ticket.quality + 1
+        shop.items = [ticket]
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
+        // When
+        oneDayPasses()
         
-        XCTAssertEqual(itemStartQuality + 1, app.items[0].quality)
+        // Then ticket quality has increased by 1
+        itemIsExpectedQuality()
     }
     
-    func testConcertTicketIncresesInQualityByTwoIfTenDaysOrLess() {
-        let testItems = items(ofTypes: [.concertTicket(daysToConcert: 10)])
-        let itemStartQuality = testItems[0].quality
+    func testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess() {
+        // Given
+        let ticket = concertTicket(daysToConcert: 10)
+        expectedEndQuality = ticket.quality + 2
+        shop.items = [ticket]
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
+        // When
+        oneDayPasses()
         
-        XCTAssertEqual(itemStartQuality + 2, app.items[0].quality)
+        // Then ticket quality has increased by 2
+        itemIsExpectedQuality()
     }
     
-    func testConcertTicketIncresesInQualityByThreeIfFiveDaysOrLess() {
-        let testItems = items(ofTypes: [.concertTicket(daysToConcert: 5)])
-        let itemStartQuality = testItems[0].quality
+    func testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess() {
+        // Given
+        let ticket = concertTicket(daysToConcert: 5)
+        expectedEndQuality = ticket.quality + 3
+        shop.items = [ticket]
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
+        // When
+        oneDayPasses()
         
-        XCTAssertEqual(itemStartQuality + 3, app.items[0].quality)
+        // Then ticket quality has increased by 3
+        itemIsExpectedQuality()
     }
     
     func testConcertTicketQualityIsZeroAfterConcert() {
-        let testItems = items(ofTypes: [.concertTicket(daysToConcert: 0)])
+        // Given
+        let ticket = concertTicket(daysToConcert: 0)
+        expectedEndQuality = 0
+        shop.items = [ticket]
+
+        // When
+        oneDayPasses()
         
-        let app = GildedRose(items: testItems)
-        app.updateQuality()
-        
-        XCTAssertEqual(0, app.items[0].quality)
+        // Then ticket quality is zero, you've missed the concert
+        itemIsExpectedQuality()
     }
 }
 
@@ -122,6 +205,17 @@ extension GildedRoseTests {
     static var allTests : [(String, (GildedRoseTests) -> () throws -> Void)] {
         return [
             ("testFoo", testFoo),
+            ("testQualityDegradesByOneBeforeSellByDate", testQualityDegradesByOneBeforeSellByDate),
+            ("testQualityDegradesByTwoAfterSellByDate", testQualityDegradesByTwoAfterSellByDate),
+            ("testQualityOfItemIsNeverNegative", testQualityOfItemIsNeverNegative),
+            ("testAgedBrieIncreasesInQualityWithAge", testAgedBrieIncreasesInQualityWithAge),
+            ("testQualityOfItemNeverMoreThanFifty", testQualityOfItemNeverMoreThanFifty),
+            ("testSulfurasNeverDecreasesInQuality", testSulfurasNeverDecreasesInQuality),
+            ("testSulfurasNeverHasToBeSold", testSulfurasNeverHasToBeSold),
+            ("testConcertTicketIncreasesInQualityByOneIfMoreThanTenDays", testConcertTicketIncreasesInQualityByOneIfMoreThanTenDays),
+            ("testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess", testConcertTicketIncreasesInQualityByTwoIfTenDaysOrLess),
+            ("testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess", testConcertTicketIncreasesInQualityByThreeIfFiveDaysOrLess),
+            ("testConcertTicketQualityIsZeroAfterConcert", testConcertTicketQualityIsZeroAfterConcert)
         ]
     }    
 }

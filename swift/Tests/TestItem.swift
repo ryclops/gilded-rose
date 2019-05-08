@@ -56,3 +56,7 @@ func items(ofTypes types: [TestItem]) -> [Item] {
 func itemOfType(_ type: TestItem) -> Item {
     return Item(name: type.name, sellIn: type.sellIn, quality: type.quality)
 }
+
+func concertTicket(daysToConcert days: Int) -> Item {
+    return itemOfType(.concertTicket(daysToConcert: days))
+}
