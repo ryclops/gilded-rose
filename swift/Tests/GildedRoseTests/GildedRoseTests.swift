@@ -66,6 +66,16 @@ class GildedRoseTests: XCTestCase {
         
         XCTAssertEqual(itemStartQuality, app.items[0].quality)
     }
+    
+    func testSulfurasNeverHasToBeSold() {
+        let testItems = items(ofTypes: [.sulfuras])
+        let itemStartSellIn = testItems[0].sellIn
+        
+        let app = GildedRose(items: testItems)
+        app.updateQuality()
+        
+        XCTAssertEqual(itemStartSellIn, app.items[0].sellIn)
+    }
 }
 
 #if os(Linux)
