@@ -78,7 +78,7 @@ class GildedRoseTests: XCTestCase {
     }
     
     func testConcertTicketIncreasesInQualityByOneIfMoreThanTenDays() {
-        let testItems = items(ofTypes: [.concertTicket(15)])
+        let testItems = items(ofTypes: [.concertTicket(daystoConcert: 15)])
         let itemStartQuality = testItems[0].quality
         
         let app = GildedRose(items: testItems)
