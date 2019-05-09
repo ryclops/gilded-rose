@@ -8,35 +8,9 @@ class GildedRoseTests: XCTestCase {
     var expectedEndQuality: Int?
     var expectedEndSellIn: Int?
     
-    var firstItem: Item {
-        return shop.items[0]
-    }
-    
     override func setUp() {
         super.setUp()
         shop = GildedRose(items: [])
-    }
-    
-    func oneDayPasses() {
-        shop.updateQuality()
-    }
-    
-    func itemIsExpectedQuality() {
-        guard let expectedQuality = expectedEndQuality else {
-            XCTAssert(false)
-            return
-        }
-        
-        XCTAssert(expectedQuality == firstItem.quality)
-    }
-    
-    func itemIsExpectedSellIn() {
-        guard let expectedSellIn = expectedEndSellIn else {
-            XCTAssert(false)
-            return
-        }
-        
-        XCTAssert(expectedSellIn == firstItem.sellIn)
     }
     
     // MARK: - Tests
@@ -241,8 +215,35 @@ class GildedRoseTests: XCTestCase {
     }
 }
 
-#if os(Linux)
 extension GildedRoseTests {
+    
+    var firstItem: Item {
+        return shop.items[0]
+    }
+    
+    func oneDayPasses() {
+        shop.updateQuality()
+    }
+    
+    func itemIsExpectedQuality() {
+        guard let expectedQuality = expectedEndQuality else {
+            XCTAssert(false)
+            return
+        }
+        
+        XCTAssert(expectedQuality == firstItem.quality)
+    }
+    
+    func itemIsExpectedSellIn() {
+        guard let expectedSellIn = expectedEndSellIn else {
+            XCTAssert(false)
+            return
+        }
+        
+        XCTAssert(expectedSellIn == firstItem.sellIn)
+    }
+    
+    #if os(Linux)
     static var allTests : [(String, (GildedRoseTests) -> () throws -> Void)] {
         return [
             ("testFoo", testFoo),
@@ -261,6 +262,7 @@ extension GildedRoseTests {
             ("testConjuredItemsDegradeTwiceAsFast", testConjuredItemsDegradeTwiceAsFast),
             ("testConjuredItemsCannotBeNegativeQuality", testConjuredItemsCannotBeNegativeQuality)
         ]
-    }    
+    }
+    #endif
 }
-#endif
+
